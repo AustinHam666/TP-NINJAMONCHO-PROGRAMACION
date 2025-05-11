@@ -53,18 +53,33 @@ export default class Game extends Phaser.Scene {
       fill: "#fff",
     });
 
-    this.time.addEvent({ //evento que se ejecuta cada 1,5 seg
-      delay: 1500,
+    this.time.addEvent({ //evento que se ejecuta cada 0,5 seg
+      delay: 500, //reduccion de tiempo de evento a 0,5
       callback: () => {
         const tipos = ["triangulo", "cuadrado", "diamante"]; //figuras a recolectar
         const tipo = Phaser.Utils.Array.GetRandom(tipos); //aleatorio para elegir que figura cae
         const x = Phaser.Math.Between(50, 750); //posicion aleatoria en x
         const figura = this.physics.add.image(x, 0, tipo).setScale(0.5); //crea la figura en posicion aleatoria y0
         figura.tipo = tipo; //guarda la figura en variante tipo
+        
+        if (tipo === "triangulo") { //puntos segun figura
+          figura.restapuntos = 10;
+        } else if (tipo === "cuadrado") {
+          figura.restapuntos = 15;
+        } else if (tipo === "diamante") {
+          figura.restapuntos = 25;
+        }
+        
         figura.setVelocityY(Phaser.Math.Between(80, 150)); //vel de caida aleatoria
         figura.setBounce(0.5); //rebote de la figura
         figura.setCollideWorldBounds(true); //limites para que las figuras no salgan de la pantalla
-        this.physics.add.collider(figura, this.platforms); //colision figura y plataforma
+        
+        this.physics.add.collider(figura, this.platforms, () => {
+          figura.restapuntos -= 5; //le saca 5 puntos al caer la figura
+          if (figura.restapuntos <= 0) { //si la figura llega a 0 puntos desaparece
+            figura.destroy(); 
+          }
+        });
 
         this.physics.add.overlap(this.player, figura, () => { //colision pj y figura
           figura.destroy(); //cuando el pj toca la figura desaparece
