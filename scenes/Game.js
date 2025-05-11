@@ -30,6 +30,9 @@ export default class Game extends Phaser.Scene {
     //reescalo plataforma
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(400, 568, "plataforma").setScale(2).refreshBody();
+    this.platforms.create(600, 400, "plataforma");
+    this.platforms.create(50, 250, "plataforma");
+    this.platforms.create(750, 220, "plataforma");
 
     this.player = this.physics.add.sprite(400, 300, "ninja");
     this.player.setScale(0.1); //reescalo el pj para que sea mas chico
@@ -69,7 +72,7 @@ export default class Game extends Phaser.Scene {
         } else if (tipo === "diamante") {
           figura.restapuntos = 25;
         }
-        
+
         figura.setVelocityY(Phaser.Math.Between(80, 150)); //vel de caida aleatoria
         figura.setBounce(0.5); //rebote de la figura
         figura.setCollideWorldBounds(true); //limites para que las figuras no salgan de la pantalla
