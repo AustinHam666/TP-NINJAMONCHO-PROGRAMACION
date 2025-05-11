@@ -87,7 +87,7 @@ export default class Game extends Phaser.Scene {
           const triangulos = this.figRecolectadas.filter(f => f === "triangulo").length;
           const diamantes = this.figRecolectadas.filter(f => f === "diamante").length;
 
-          if (cuadrados >= 2 && triangulos >= 2 && diamantes >= 2) { //al tener 2 de cada forma se gana
+          if (this.puntos >= 100){
             this.player.setTint(0x00ff00); //pinto al pj de verde
             this.add.text(300, 300, "VICTORIA", {
               fontSize: "40px",
