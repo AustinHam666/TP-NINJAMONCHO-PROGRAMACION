@@ -72,7 +72,9 @@ export default class Game extends Phaser.Scene {
           figura.restapuntos = 15;
         } else if (tipo === "diamante") {
           figura.restapuntos = 25;
-        } 
+        } else if (tipo === "circulo") {
+          figura.restapuntos = 10;
+        }
 
         figura.setVelocityY(Phaser.Math.Between(80, 150)); //vel de caida aleatoria
         figura.setBounce(0.5); //rebote de la figura
@@ -104,17 +106,9 @@ export default class Game extends Phaser.Scene {
           this.puntos += puntosGanados; //suma los puntos y los muestra en pantalla
           this.puntosTexto.setText("Puntos: " + this.puntos);
 
-          const cuadrados = this.figRecolectadas.filter(f => f === "cuadrado").length;//cuenta las formas recolectadas
-          const triangulos = this.figRecolectadas.filter(f => f === "triangulo").length;
-          const diamantes = this.figRecolectadas.filter(f => f === "diamante").length;
-
-          if (this.puntos >= 100){
-            this.player.setTint(0x00ff00); //pinto al pj de verde
-            this.add.text(300, 300, "VICTORIA", {
-              fontSize: "40px",
-              fill: "#0f0"
-            });
-            this.scene.pause(); //pausa la escena
+          if (this.puntos >= 100) {
+          this.scene.start("GameOver", { ganaste: true, puntos: this.puntos });
+           this.scene.stop("Game"); //detiene la escena actual
           }
         });
       },
@@ -128,13 +122,9 @@ export default class Game extends Phaser.Scene {
         this.timerText.setText("Tiempo: " + this.timeLeft); //imprime tiempo
 
         if (this.timeLeft <= 0) { // verifica tiempo
-          this.player.setTint(0xff0000); //pj rojo si pierde
-          this.add.text(300, 300, "PERDISTE", { //muestra mensaje
-            fontSize: "40px",
-            fill: "#f00"
-          });
-          this.scene.pause(); //pausa la escena
-        }
+        this.scene.start("GameOver", { ganaste: false, puntos: this.puntos });
+        this.scene.stop("Game"); //se detiene la escena actual
+         }
       },
       loop: true, //vuelve el evento un bucle
     });
